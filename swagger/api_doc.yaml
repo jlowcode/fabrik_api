@@ -1,0 +1,249 @@
+swagger: '2.0'
+info:
+  description: >-
+    The Fabrik API allows you to insert, update, delete records and query data for all records or specific records.
+    
+    
+    To use, send a request to "Joomla Path + Base URL". The request body needs two properties, "authentication" with "api_key" and "api_secret" and "options" with auxiliary data to execute the actions. (Check out the examples below)
+  version: 1.0.0
+  title: Fabrik API
+  contact:
+    email: suportepitt@gmail.com
+host: >-
+  index.php?option=com_fabrik&format=raw&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&g=list
+tags:
+  - name: records
+    description: Add, edit and delete records from a list
+paths:
+  /pitt:
+    post:
+      tags:
+        - records
+      summary: Add a new record to a list
+      description: ''
+      parameters:
+        - in: body
+          name: requestBody
+          description: Data needed to verify access to the API and create a new record in a list
+          required: true
+          schema:
+            $ref: '#/definitions/PostRowData'
+      responses:
+        '200':
+          description: Output
+          schema:
+            $ref: '#/definitions/PostRowResponse'
+          
+    put:
+      tags:
+        - records
+      summary: Update an existing record in a list
+      description: ''
+      parameters:
+        - in: body
+          name: requestBody
+          description: Data needed to verify access to the API and update an existing record in a list
+          required: true
+          schema:
+            $ref: '#/definitions/PutRowData'
+      responses:
+        '200':
+          description: Output
+          schema:
+            $ref: '#/definitions/PutRowResponse'
+    delete:
+      tags:
+        - records
+      summary: Delete a single record or multiple records in a list
+      description: ''
+      parameters:
+        - in: body
+          name: requestBody
+          description: Data needed to verify access to the API and delete the records
+          required: true
+          schema:
+            $ref: '#/definitions/DeleteRowData'
+      responses:
+        '200':
+          description: Output
+          schema:
+            $ref: '#/definitions/DeleteRowResponse'
+    get:
+      tags:
+        - records
+      summary: Get data from all records or specific records in a list
+      description: ''
+      parameters:
+        - in: body
+          name: requestBody
+          description: Data needed to verify access to the API and get data from records
+          required: true
+          schema:
+            $ref: '#/definitions/GetRowData'
+      responses:
+        '200':
+          description: Output
+          schema:
+            $ref: '#/definitions/GetRowResponse'      
+definitions:
+  PostRowData:
+    type: object
+    properties:
+      authentication:
+        type: object
+        properties:
+          api_key:
+            type: string
+          api_secret:
+            type: string
+      options:
+        type: object
+        properties:
+          list_id:
+            type: integer
+            format: int64
+            example: 4
+          row_data:
+            type: object
+            example: {"pitt_obras___titulo": "Obra 1", "pitt_obras___descricao": "Example"}
+  PostRowResponse:
+    type: object
+    properties:
+      error:
+        type: boolean
+        example: false
+      msg:
+        type: string
+        example: Registro inserido com sucesso!
+      data:
+        type: object
+        properties:
+          row_id: 
+            type: integer
+            format: int64
+            example: 10
+  PutRowData:
+    type: object
+    properties:
+      authentication:
+        type: object
+        properties:
+          api_key:
+            type: string
+          api_secret:
+            type: string
+      options:
+        type: object
+        properties:
+          list_id:
+            type: integer
+            format: int64
+            example: 4
+          row_id:
+            type: integer
+            format: int64
+            example: 20
+          row_data:
+            type: object
+            example: {"pitt_obras___titulo": "Obra 1", "pitt_obras___descricao": "Example"}
+  PutRowResponse:
+    type: object
+    properties:
+      error:
+        type: boolean
+        example: false
+      msg:
+        type: string
+        example: Registro atualizado com sucesso!
+      data:
+        type: object
+  DeleteRowData:
+    type: object
+    properties:
+      authentication:
+        type: object
+        properties:
+          api_key:
+            type: string
+          api_secret:
+            type: string
+      options:
+        type: object
+        properties:
+          list_id:
+            type: integer
+            format: int64
+            example: 10
+          row_id:
+            type: array
+            items:
+              type: integer
+              example: 1,2,3
+  DeleteRowResponse:
+    type: object
+    properties:
+      error:
+        type: boolean
+        example: false
+      msg:
+        type: string
+        example: Registro excluído com sucesso!
+      data:
+        type: object
+  GetRowData:
+    type: object
+    properties:
+      authentication:
+        type: object
+        properties:
+          api_key:
+            type: string
+          api_secret:
+            type: string
+      options:
+        type: object
+        properties:
+          list_id:
+            type: integer
+            format: int64
+            example: 1
+          row_id:
+            type: array
+            items:
+              type: integer
+              example: 1,2
+          data_type:
+            type: string
+            example: list
+          filters:
+            type: array
+            items:
+              example: "filter_name: filter_value"
+  GetRowResponse:
+    type: object
+    properties:
+      error:
+        type: boolean
+        example: false
+      msg:
+        type: string
+        example: Sucesso!
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            pitt_obras___id:
+              type: integer
+            pitt_obras___titulo:
+              type: string
+            pitt_obras___descricao:
+              type: string
+          example:
+            - pitt_obras___id: 1
+              pitt_obras___titulo: "Obra 1"
+              pitt_obras___descricao: "Exemplo 1"
+            - pitt_obras___id: 2
+              pitt_obras___titulo: "Obra 2"
+              pitt_obras___descricao: "Exemplo 2"
+            
