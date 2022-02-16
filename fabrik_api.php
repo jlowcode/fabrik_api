@@ -18,10 +18,13 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
 
     private $fM;
     private $lM;
-
+    
     public function onApiCalled() {
         $this->response->error = false;
         $this->response->msg = '';
+        
+        $this->authentication = json_decode($_POST['authentication']);
+        $this->options = json_decode($_POST['options']);
 
         if ($this->setData()) {
             if ($this->authenticate()) {
@@ -33,7 +36,6 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
                 }
             }
         }
-
         echo json_encode($this->response);
     }
 
@@ -60,10 +62,21 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
                 $this->type = $this->options->type;
                 break;
             case 'GET':
-                $this->authentication = json_decode($_GET['authentication']);
-                $this->options = json_decode($_GET['options']);
+                // INICIO - Modificação para receber da mesma forma que PUT e DELETE //
+                parse_str(file_get_contents("php://input"), $requestData);
+                $this->authentication = json_decode($requestData['authentication']);
+                $this->options = json_decode($requestData['options']);
                 $this->action = 'get';
                 $this->type = $this->options->type;
+
+                // Forma original que não funcionou pois reconhecia como POST
+                /*$this->authentication = json_decode($_GET['authentication']);
+                $this->options = json_decode($_GET['options']);
+                $this->action = 'get';
+                $this->type = $this->options->type;*/
+
+                // FIM - Modificação para receber da mesma forma que PUT e DELETE //
+
                 break;
         }
 
@@ -329,11 +342,12 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $formModel->setRowId($options->row_id);
 
         $formData = (array) $formModel->getData();
-
+        
         $fileuploads = array();
         $db_joins_single = array();
         $db_joins_multi = array();
         $groups = $formModel->getGroupsHiarachy();
+
         foreach ($groups as $groupModel)
         {
             $elementModels = $groupModel->getPublishedElements();
@@ -520,7 +534,7 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $element->params = json_encode($params);
 
         $db = JFactory::getDbo();
-        $insert = $db->insertObject('#___fabrik_elements', $element, 'id');
+        $insert = $db->insertObject('#__fabrik_elements', $element, 'id'); // ERRO 404 (#___fabrik_elements)
         $modify = $this->modifyTable($element, $db->insertid());
 
         if (($insert) && ($modify)) {
@@ -604,7 +618,7 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $element = new stdClass();
         $element->id = $options->element_id;
         $element->label = JString::strtolower($options->label);
-
+        
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select("params")->from("#__fabrik_elements")->where("id = " . (int) $element->id);
@@ -621,7 +635,7 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $element->params = json_encode($params);
 
         $db = JFactory::getDbo();
-        $update = $db->updateObject('#___fabrik_elements', $element, 'id');
+        $update = $db->updateObject('#__fabrik_elements', $element, 'id'); // ERRO 404 (#___fabrik_elements)
 
         if ($update) {
             $this->response->msg = "Sucesso!";
