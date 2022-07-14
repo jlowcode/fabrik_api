@@ -8,7 +8,7 @@
 
 </br>
 
-<p style="text-align: justify">Após isso, basta navegar aos arquivos .rar das duas extensões necessárias e arrastar para a caixa de seleção, se ocorrer tudo como esperado na instalação o resultado deve ser o seguinte.</p>
+<p style="text-align: justify">Após isso, basta navegar aos arquivos .rar das duas extensões necessárias e arrastar para a caixa de seleção, se ocorrer tudo como esperado na instalação o resultado deve ser o seguinte:</p>
 
 ![Resultado Instalação 1](Images/2.png) 
 ![Resultado Instalação 2](Images/3.png)
@@ -55,7 +55,7 @@ Nesse sentido, o corpo da requisição deve ser no formato json com os índices 
 ##### Authentication
 
 * api_key: Valor encontrado na coluna "Client ID" da etapa 2 de configurações iniciais. (Fixo)
-* api_secret - Valor encontrado na coluna "Client Secret" da etapa 2 de configurações iniciais. (Fixo)
+* api_secret: Valor encontrado na coluna "Client Secret" da etapa 2 de configurações iniciais. (Fixo)
 
 
 ##### Options
@@ -94,7 +94,7 @@ Nesse sentido, o corpo da requisição deve ser no formato json com os índices 
 <p style="text-align: justify">Com todas essas opções de parâmetros é possível montar uma requisição que adiciona, deleta, atualiza e insere novos dados em listas do fabrik, e ainda, adiciona e atualiza elementos dessas listas.</p>
 
 ## Retorno da API
-<p style="text-align: justify">Independentemente do tipo de requisição o formato padrão da resposta da API é em formato json contendo um índice "error" sendo true em caso de erro na requisição ou false em caso de sucesso da mesma. Entretanto, dependendo do tipo de requisição solicitada há outro índice no json chamado "msg" que possui mensagens de sucesso e erros apropriadas para cada solicitação, além do índice "data" que contém os dados retornados pelo GET e POST na inserção ou seleção de linhas da lista desejada, em outros cados "data" não é retornado ou retorna vazio.</p>
+<p style="text-align: justify">Independentemente do tipo de requisição o formato padrão da resposta da API é em formato json contendo um índice "error" sendo true em caso de erro na requisição ou false em caso de sucesso da mesma. Entretanto, dependendo do tipo de requisição solicitada há outro índice no json chamado "msg" que possui mensagens de sucesso e erros apropriadas para cada solicitação, além do índice "data" que contém os dados retornados pelo GET e POST na inserção ou seleção de linhas da lista desejada, em outros casos "data" não é retornado ou retorna vazio.</p>
 
 ## Atualizações
 ### Atualização de URL GET
