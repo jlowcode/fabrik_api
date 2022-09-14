@@ -1,5 +1,11 @@
 <?php
 
+//print_r($_REQUEST);die();
+//echo '------------------';
+//echo '<pre>'.json_decode($_REQUEST['authentication']).'</pre>';
+//echo '-----------------';
+//die();
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
@@ -23,8 +29,10 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $this->response->error = false;
         $this->response->msg = '';
         
-        $this->authentication = json_decode($_POST['authentication']);
-        $this->options = json_decode($_POST['options']);
+        if(!isset($_GET['api_key'])){
+            $this->authentication = json_decode($_POST['authentication']);
+            $this->options = json_decode($_POST['options']);
+        }
 
         if ($this->setData()) {
             if ($this->authenticate()) {
@@ -62,21 +70,60 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
                 $this->type = $this->options->type;
                 break;
             case 'GET':
-                // INICIO - Modificação para receber da mesma forma que PUT e DELETE //
-                parse_str(file_get_contents("php://input"), $requestData);
-                $this->authentication = json_decode($requestData['authentication']);
-                $this->options = json_decode($requestData['options']);
+                if(isset($_GET['api_key'])) {
+                    $this->authentication->api_key = $_GET['api_key'];
+                    $this->authentication->api_secret = $_GET['api_secret'];
+
+                    //https://selecao2.cett.dev.br/index.php?option=com_fabrik&
+                        //format=raw&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&g=list&
+                        //api_key=83b8bc33f786b5f99186a82b2aaa0073&api_secret=c9914469e8aa414fa66e58cc96e068281bde4e56e7f4fd144cbe9973b3df89a0&
+                        //options=list_id:5|data_type:list|type:site
+
+                    //options='list_id:int|data_type:string|type:string|row_id:int|filters:element0#value0..element1#value1..element2#value2..element3#value3';
+                    if(isset($_GET['options']))
+                    {
+                        $options = explode("|",$_GET['options']);
+                        
+                        foreach($options as $item)
+                        {
+                            $arrItem = explode(":",$item);
+                            if($arrItem[0] != 'filters')
+                            {
+                                $this->options->{$arrItem[0]} = $arrItem[1];
+                            }
+                            else
+                            {
+                                //echo $arrItem[1].'<br/>';
+                                $arrFilter = explode("..",$arrItem[1]);
+                                foreach($arrFilter as $filter)
+                                {
+                                    //echo $filter;die();
+                                    $arrProp = explode('=',$filter);
+                                    //print_r($filter);echo '<br/>';
+                                    $this->options->{$arrItem[0]}->{$arrProp[0]} = $arrProp[1];
+                                }
+                            }
+                        }
+                        
+                    }
+                    //print_r($this->options);die();
+                }else{
+                    // BEGIN - Modification to receive in the same way as PUT and DELETE //
+                    parse_str(file_get_contents("php://input"), $requestData);
+                    $this->authentication = json_decode($requestData['authentication']);
+                    $this->options = json_decode($requestData['options']);
+                    $this->action = 'get';
+                    $this->type = $this->options->type;
+                    // END - Modification to receive in the same way as PUT and DELETE //
+
+
+                    // Original way that didn't work because it recognized as POST
+                    /*$this->authentication = json_decode($_GET['authentication']);
+                    $this->options = json_decode($_GET['options']);*/
+                }
+
                 $this->action = 'get';
                 $this->type = $this->options->type;
-
-                // Forma original que não funcionou pois reconhecia como POST
-                /*$this->authentication = json_decode($_GET['authentication']);
-                $this->options = json_decode($_GET['options']);
-                $this->action = 'get';
-                $this->type = $this->options->type;*/
-
-                // FIM - Modificação para receber da mesma forma que PUT e DELETE //
-
                 break;
         }
 
@@ -104,7 +151,7 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
             ->where("access_token = '{$access_token}'");
         $db->setQuery($query);
         $result = $db->loadResult();
-
+        
         if (!$result) {
             $this->response->error = true;
             $this->response->msg = JText::sprintf('PLG_FABRIK_LIST_FABRIK_API_NO_ACCESS');
@@ -319,6 +366,8 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
             }
 
             $rows_ids[] = $formModel->formData[$table . '___id'];
+            $this->verifyProcess($table, $record, $rows_ids[0]);
+
             $formModel->unsetData();
         }
 
@@ -331,6 +380,36 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         else {
             $this->response->msg = JText::sprintf('PLG_FABRIK_LIST_FABRIK_API_ADD_RECORD_ERROR');
         }
+    }
+
+    private function verifyProcess($table, $record, $row_id) {
+        $db = JFactory::getDbo();
+        $data = (array) $record;
+        $columns = Array();
+        $obj = new stdClass();
+
+        foreach ($data as $key => $item) {
+            $columns[] = explode("___", $key)[1];
+        }
+
+		$query = $db->getQuery(true)
+			->select('`' . implode('`,`', $columns) . '`')
+			->from($db->quoteName($table))
+			->where('id = ' . $db->quote($row_id));
+		$db->setQuery($query);
+		$result = $db->loadObjectList();
+
+        foreach((array) $result[0] as $keyTable => $value) {
+            if(!$value) {
+                $keyObject = $table . '___' . $keyTable;
+                $obj->$keyTable = $record->$keyObject;
+            }
+        }
+
+        $obj->id = $row_id;
+        $db->updateObject($table, $obj, 'id');
+
+        return true;
     }
 
     private function updateRowOfList() {
@@ -441,7 +520,12 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $options = $this->options;
         $options->filters = (array) $options->filters;
 
-        $url = COM_FABRIK_LIVESITE . "index.php?option=com_fabrik&view=list&listid={$options->list_id}&format=json&limit{$options->list_id}=-1";
+        //$url = COM_FABRIK_LIVESITE . "index.php?option=com_fabrik&view=list&listid={$options->list_id}&format=json&limit{$options->list_id}=-1";
+        $url = COM_FABRIK_LIVESITE . "index.php?option=com_fabrik&view=list&listid={$options->list_id}&format=json";
+        if($options->limit)
+            $url .= "&limit{$options->list_id}=".$options->limit;
+        else
+            $url .= "&limit{$options->list_id}=10";
 
         if (!empty($options->filters)) {
             $url .= "&resetfilters=1";
@@ -450,6 +534,8 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
             }
         }
 
+        //echo $url; die();
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
