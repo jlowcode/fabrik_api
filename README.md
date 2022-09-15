@@ -8,7 +8,7 @@
 
 </br>
 
-<p style="text-align: justify">Após isso, basta navegar aos arquivos .rar das duas extensões necessárias e arrastar para a caixa de seleção, se ocorrer tudo como esperado na instalação o resultado deve ser o seguinte:</p>
+<p style="text-align: justify">Após isso, basta navegar aos arquivos .rar das duas extensões necessárias e arrastar para a caixa de seleção, se ocorrer tudo como esperado na instalação o resultado deve ser o seguinte.</p>
 
 ![Resultado Instalação 1](Images/2.png) 
 ![Resultado Instalação 2](Images/3.png)
@@ -37,6 +37,16 @@
 
 <p style="text-align: justify">Em seguida, voltando a tela anterior, deve ser vista a nova credencial de acesso para esta API. Os códigos nas colunas Client Id e Client Secret deverão ser enviados sempre nas requisições para que seja legitimada a operação.</p>
 
+<b>3. Vincule o plugin às listas desejadas</b>
+
+<p style="text-align: justify">Para acessar certa lista via api é necessário que o plugin esteja vinculada a lista que deseja, para realizar este vínculo vá em Components->Fabrik->Lists como abaixo e clique na lista desejada.</p>
+
+![Listas Fabrik](Images/8.png)
+
+<p style="text-align: justify">Após, vá na aba plugins no canto esquerdo da tela e clique em Add, feito isso em -- do ---* selecione o plugin fabrik_api e dê uma descrição ao mesmo. Deverá ficar dessa forma.</p>
+
+![Vinculo plugin lista](Images/9.png)
+
 ## Utilização
 
 <p style="text-align: justify"> Com a instalação e todas as configurações iniciais realizadas corretamente nos passos anteriores a API já está funcionando adequadamente, desta forma, é importante entender como utilizá-la e o básico de seu funcionamento.</br>
@@ -46,7 +56,7 @@ Para realizar a requisição padrão da API deve-se ter o seguinte formato padr�
 <p style="text-align: center">URL = Base(Variável) + Formatação(Fixo)</p>
 
 * <b>Base:</b> https://selecao2.cett.dev.br/index.php?
-* <b>Formatação:</b> option=com_fabrik&format=raw&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&g=list&
+* <b>Formatação:</b> option=com_fabrik&format=raw&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&g=list
 
 <p style="text-align: justify">Com a url montada como o exemplo anterior já é possível acessar o plugin, porém para realizar a requisição deve-se enviar no corpo da requisição alguns parâmetros dependendo do tipo de requisição a ser realizada, ou seja, há os parâmetros fixos e os variáveis.
 
@@ -55,7 +65,7 @@ Nesse sentido, o corpo da requisição deve ser no formato json com os índices 
 ##### Authentication
 
 * api_key: Valor encontrado na coluna "Client ID" da etapa 2 de configurações iniciais. (Fixo)
-* api_secret: Valor encontrado na coluna "Client Secret" da etapa 2 de configurações iniciais. (Fixo)
+* api_secret - Valor encontrado na coluna "Client Secret" da etapa 2 de configurações iniciais. (Fixo)
 
 
 ##### Options
@@ -94,7 +104,7 @@ Nesse sentido, o corpo da requisição deve ser no formato json com os índices 
 <p style="text-align: justify">Com todas essas opções de parâmetros é possível montar uma requisição que adiciona, deleta, atualiza e insere novos dados em listas do fabrik, e ainda, adiciona e atualiza elementos dessas listas.</p>
 
 ## Retorno da API
-<p style="text-align: justify">Independentemente do tipo de requisição o formato padrão da resposta da API é em formato json contendo um índice "error" sendo true em caso de erro na requisição ou false em caso de sucesso da mesma. Entretanto, dependendo do tipo de requisição solicitada há outro índice no json chamado "msg" que possui mensagens de sucesso e erros apropriadas para cada solicitação, além do índice "data" que contém os dados retornados pelo GET e POST na inserção ou seleção de linhas da lista desejada, em outros casos "data" não é retornado ou retorna vazio.</p>
+<p style="text-align: justify">Independentemente do tipo de requisição o formato padrão da resposta da API é em formato json contendo um índice "error" sendo true em caso de erro na requisição ou false em caso de sucesso da mesma. Entretanto, dependendo do tipo de requisição solicitada há outro índice no json chamado "msg" que possui mensagens de sucesso e erros apropriadas para cada solicitação, além do índice "data" que contém os dados retornados pelo GET e POST na inserção ou seleção de linhas da lista desejada, em outros cados "data" não é retornado ou retorna vazio.</p>
 
 ## Atualizações
 ### Atualização de URL GET
