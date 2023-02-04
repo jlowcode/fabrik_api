@@ -516,7 +516,48 @@ class PlgFabrik_ListFabrik_api extends PlgFabrik_List {
         $this->changeAllowDelete($listModel->getId(), 1);
     }
 
-    private function getListData() {
+    private function getListData()
+    {
+        $options = $this->options;
+        $options->filters = (array) $options->filters;
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $table = $this->lM->getTable()->db_table_name;
+
+        $columns = '*';
+        if(isset($options->cols) && trim($options->cols) != '') {
+            $columns = $options->cols;
+        }
+
+        $query->select($columns)->from($table);
+        if(isset($options->filters) && sizeof($options->filters) > 0) {
+            foreach ($options->filters as $key=>$item) {
+                $query->where($key . ' = "' . $item . '"');
+            }
+        }
+
+        $offset = 0;
+        $limit = 30;
+
+        if(isset($options->o) && trim($options->o) != '') {
+            $offset = $options->o;
+        }
+
+        if(isset($options->l) && trim($options->l) != '') {
+            $limit = $options->l;
+        }
+
+        $db->setQuery($query,$offset,$limit);
+        $data = $db->loadAssocList();
+
+        $this->response->msg = JText::sprintf('PLG_FABRIK_LIST_FABRIK_API_GET_LIST_DATA_SUCCESS');
+        $this->response->data = $data;
+    }
+
+    private function getListDataOld() {
+        //Resolvi inativar esta funcão, porque foi criado um novo padrão para atender nossas necessidades.
+        //Porem deixei aqui caso seja necessario aproveitar este código no futuro por outros dev's.
         $options = $this->options;
         $options->filters = (array) $options->filters;
 

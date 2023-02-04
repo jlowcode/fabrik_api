@@ -131,3 +131,75 @@ if(isset($_GET['api_key'])) {
 * options=list_id:int|data_type:string|type:string|row_id:int|filters:element0#value0..element1#value1..element2#value2..element3#value3
 
 <p style="text-align: justify">Dessa forma, todos os dados de busca são passados por meio do parâmetro options sendo cada um separado por "|" e dentro do parametro filters cada um filtro separado por ".." com o nome do elemento no formato do fabrik seguido de "#" e o valor desejado.</p>
+
+
+
+#### Modificação (Francisco)
+Foi reformulado a forma de retornar os dados via GET e acrescentado novas opções para facilitar a busca dos dados. Segue abaixo um link de exemplo e explicação:
+
+1) Agora você pode adicionar a option "o" que significa offset, que determina o inicio da paginação caso for utilizar na consulta da api;
+2) Foi também adicionado a option "l" que significa limit, que determina o limite de dados que será retornados;
+3) Foi tambem adicionado a option "cols" que determina quais elementos serão retornados no json. <b>Ex.: nome,id,date_time</b>
+4) Agora você não precisa mais informa toda a descrição do elemento, por exemplo se você deseja aplicar uma condição de filtragem (where) para uma coluna denominada matricula_0_matriculados___id, basta informar somente o valor <b>id</b>;
+
+Segue exemplos:
+
+Postman (curl):
+curl -X GET \
+  'http://tselecao1.cett.dev.br/index.php?option=com_fabrik&format=json&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&api_key=b0c5196a79613a59ea7ddb444cd3cacb&api_secret=2acfc24548faf7d63070360f0e200d4cceeecff15937e838d331a05aca0ff906&g=list&options=list_id%3A29%7Cdata_type%3Alist%7Ctype%3Asite%7Co%3A0%7Cl%3A3%7Ccols%3Aid%2Csituacao%2Ctipo%2Cmodalidade%7Cfilters%3Amodalidade%3DEAD' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
+  -H 'postman-token: 5e97107e-7eac-04b2-64ca-683511c06a3f'
+
+
+Javascript:
+https://tselecao1.cett.dev.br/index.php?option=com_fabrik&format=json&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&api_key=b0c5196a79613a59ea7ddb444cd3cacb&api_secret=2acfc24548faf7d63070360f0e200d4cceeecff15937e838d331a05aca0ff906&g=list&options=list_id:29|data_type:list|type:site|o:0|l:3|cols:id,situacao,tipo,modalidade|filters:modalidade=EAD
+
+Este exemplo passa os seguintes parametros:
+
+option: com_fabrik
+format: json
+task: plugin.pluginAjax
+plugin: fabrik_api
+method: apiCalled
+api_key: Você tem q criar ai na sua aplicação e disponibilizar aqui
+api_secret: Você tem q criar ai na sua aplicação e disponibilizar aqui
+g: list
+options:
+  - list_id: Id da Lista que deseja acessar os dados;
+  - data_type: Tipo de Acesso (Sempre colocar <b>list</b>);
+  - type: Sempre colocar <b>site</b>;
+  - o: Colocar o offset que seja utilizar no caso de paginação. Por padrão será utilizado o 0 (zero);
+  - l: Limite de dados a serem retornados. Por padrão será utilizado o 30 (trinta);
+  - cols: Aqui você define quais elementos/dados você deseja que seja retornado no json. Ex.: <b>id, nome_completo, tipo</b>
+  - filters: Aqui você passa os parametross que serão utilizados nas condições de filtragem como o Where por exemplo. Se nada for passado, não será aplicado filtragem.
+
+
+Importante:
+Os serão retornados no formato JSON:
+
+Ex.: 
+{
+    "error": false,
+    "msg": "Sucesso ao buscar os dados da lista",
+    "data": [
+        {
+            "id": "18039",
+            "situacao": "Novo",
+            "tipo": "Todos",
+            "modalidade": "EAD"
+        },
+        {
+            "id": "18057",
+            "situacao": "Novo",
+            "tipo": "Todos",
+            "modalidade": "EAD"
+        },
+        {
+            "id": "18102",
+            "situacao": "Novo",
+            "tipo": "Tecnico",
+            "modalidade": "EAD"
+        }
+    ]
+}
