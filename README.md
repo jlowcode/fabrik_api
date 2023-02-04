@@ -135,7 +135,7 @@ if(isset($_GET['api_key'])) {
 
 
 #### Modificação (Francisco)
-Foi reformulado a forma de retornar os dados via GET e acrescentado novas opções para facilitar a busca dos dados. Segue abaixo um link de exemplo e explicação:
+Foi reformulado a forma de retornar os dados via GET eacrescentado novas opções para facilitar a busca dos dados. Segue abaixo um link de exemplo e explicação:
 
 1) Agora você pode adicionar a option "o" que significa offset, que determina o inicio da paginação caso for utilizar na consulta da api;
 2) Foi também adicionado a option "l" que significa limit, que determina o limite de dados que será retornados;
@@ -152,19 +152,19 @@ curl -X GET \
   -H 'postman-token: 5e97107e-7eac-04b2-64ca-683511c06a3f'
 
 
-Javascript:
+Javascript e Browser:
 https://tselecao1.cett.dev.br/index.php?option=com_fabrik&format=json&task=plugin.pluginAjax&plugin=fabrik_api&method=apiCalled&api_key=b0c5196a79613a59ea7ddb444cd3cacb&api_secret=2acfc24548faf7d63070360f0e200d4cceeecff15937e838d331a05aca0ff906&g=list&options=list_id:29|data_type:list|type:site|o:0|l:3|cols:id,situacao,tipo,modalidade|filters:modalidade=EAD
 
 Este exemplo passa os seguintes parametros:
 
-option: com_fabrik
-format: json
-task: plugin.pluginAjax
-plugin: fabrik_api
-method: apiCalled
-api_key: Você tem q criar ai na sua aplicação e disponibilizar aqui
-api_secret: Você tem q criar ai na sua aplicação e disponibilizar aqui
-g: list
+option: com_fabrik<br/>
+format: json<br/>
+task: plugin.pluginAjax<br/>
+plugin: fabrik_api<br/>
+method: apiCalled<br/>
+api_key: Você tem q criar ai na sua aplicação e disponibilizar aqui<br/>
+api_secret: Você tem q criar ai na sua aplicação e disponibilizar aqui<br/><br/>
+g: list<br/>
 options:
   - list_id: Id da Lista que deseja acessar os dados;
   - data_type: Tipo de Acesso (Sempre colocar <b>list</b>);
@@ -178,28 +178,28 @@ options:
 Importante:
 Os serão retornados no formato JSON:
 
-Ex.: 
-{
-    "error": false,
-    "msg": "Sucesso ao buscar os dados da lista",
-    "data": [
-        {
-            "id": "18039",
-            "situacao": "Novo",
-            "tipo": "Todos",
-            "modalidade": "EAD"
-        },
-        {
-            "id": "18057",
-            "situacao": "Novo",
-            "tipo": "Todos",
-            "modalidade": "EAD"
-        },
-        {
-            "id": "18102",
-            "situacao": "Novo",
-            "tipo": "Tecnico",
-            "modalidade": "EAD"
-        }
-    ]
-}
+Ex.: <br/>
+{<br/>
+    "error": false,<br/>
+    "msg": "Sucesso ao buscar os dados da lista",<br/>
+    "data": [<br/>
+        {<br/>
+            "id": "18039",<br/>
+            "situacao": "Novo",<br/>
+            "tipo": "Todos",<br/>
+            "modalidade": "EAD"<br/>
+        },<br/>
+        {<br/>
+            "id": "18057",<br/>
+            "situacao": "Novo",<br/>
+            "tipo": "Todos",<br/>
+            "modalidade": "EAD"<br/>
+        },<br/>
+        {<br/>
+            "id": "18102",<br/>
+            "situacao": "Novo",<br/>
+            "tipo": "Tecnico",<br/>
+            "modalidade": "EAD"<br/>
+        }<br/>
+    ]<br/>
+}<br/>
