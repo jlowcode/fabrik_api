@@ -157,15 +157,15 @@ https://tselecao1.cett.dev.br/index.php?option=com_fabrik&format=json&task=plugi
 
 Este exemplo passa os seguintes parametros:
 
-option: com_fabrik<br/>
-format: json<br/>
-task: plugin.pluginAjax<br/>
-plugin: fabrik_api<br/>
-method: apiCalled<br/>
-api_key: Você tem q criar ai na sua aplicação e disponibilizar aqui<br/>
-api_secret: Você tem q criar ai na sua aplicação e disponibilizar aqui<br/><br/>
-g: list<br/>
-options:
+<b>option:</b> com_fabrik<br/>
+<b>format:</b> json<br/>
+<b>task:</b> plugin.pluginAjax<br/>
+<b>plugin:</b> fabrik_api<br/>
+<b>method:</b> apiCalled<br/>
+<b>api_key:</b> Você tem q criar ai na sua aplicação e disponibilizar aqui<br/>
+<b>api_secret:</b> Você tem q criar ai na sua aplicação e disponibilizar aqui<br/>
+<b>g:</b> list<br/>
+<b>options:</b>
   - list_id: Id da Lista que deseja acessar os dados;
   - data_type: Tipo de Acesso (Sempre colocar <b>list</b>);
   - type: Sempre colocar <b>site</b>;
@@ -180,26 +180,26 @@ Os serão retornados no formato JSON:
 
 Ex.: <br/>
 {<br/>
-    "error": false,<br/>
-    "msg": "Sucesso ao buscar os dados da lista",<br/>
-    "data": [<br/>
-        {<br/>
-            "id": "18039",<br/>
-            "situacao": "Novo",<br/>
-            "tipo": "Todos",<br/>
-            "modalidade": "EAD"<br/>
-        },<br/>
-        {<br/>
-            "id": "18057",<br/>
-            "situacao": "Novo",<br/>
-            "tipo": "Todos",<br/>
-            "modalidade": "EAD"<br/>
-        },<br/>
-        {<br/>
-            "id": "18102",<br/>
-            "situacao": "Novo",<br/>
-            "tipo": "Tecnico",<br/>
-            "modalidade": "EAD"<br/>
-        }<br/>
-    ]<br/>
+    &nbsp;"error": false,<br/>
+    &nbsp;"msg": "Sucesso ao buscar os dados da lista",<br/>
+    &nbsp;"data": [<br/>
+        &nbsp;&nbsp;{<br/>
+            &nbsp;&nbsp;&nbsp;"id": "18039",<br/>
+            &nbsp;&nbsp;&nbsp;"situacao": "Novo",<br/>
+            &nbsp;&nbsp;&nbsp;"tipo": "Todos",<br/>
+            &nbsp;&nbsp;&nbsp;"modalidade": "EAD"<br/>
+        &nbsp;&nbsp;},<br/>
+        &nbsp;&nbsp;{<br/>
+            &nbsp;&nbsp;&nbsp;"id": "18057",<br/>
+            &nbsp;&nbsp;&nbsp;"situacao": "Novo",<br/>
+            &nbsp;&nbsp;&nbsp;"tipo": "Todos",<br/>
+            &nbsp;&nbsp;&nbsp;"modalidade": "EAD"<br/>
+        &nbsp;&nbsp;},<br/>
+        &nbsp;&nbsp;{<br/>
+            &nbsp;&nbsp;&nbsp;"id": "18102",<br/>
+            &nbsp;&nbsp;&nbsp;"situacao": "Novo",<br/>
+            &nbsp;&nbsp;&nbsp;"tipo": "Tecnico",<br/>
+            &nbsp;&nbsp;&nbsp;"modalidade": "EAD"<br/>
+        &nbsp;&nbsp;}<br/>
+    &nbsp;]<br/>
 }<br/>
